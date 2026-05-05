@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Payroll</title>
+    <style>
+        body {
+            background-color: #e8f5e9;
+            font-family: Arial;
+            text-align: center;
+        }
+
+        .box {
+            background-color: white;
+            width: 380px;
+            margin: 60px auto;
+            padding: 25px;
+            border: 2px solid green;
+        }
+
+        input {
+            width: 85%;
+            padding: 7px;
+            margin: 5px;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-left: 20px;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 25px;
+            background-color: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 12px;
+            font-size: 15px;
+        }
+
+        .salary-card {
+            background-color: #f1f8e9;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid green;
+            text-align: left;
+        }
+
+        .salary-card p {
+            margin: 6px 0;
+            font-size: 15px;
+        }
+
+        .salary-card h3 {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>Employee Salary Calculator</h2>
+
+        <label>Employee Name:</label>
+        <input type="text" id="empName" placeholder="Enter name">
+
+        <label>Basic Salary (₹):</label>
+        <input type="number" id="basicSalary" placeholder="Enter basic salary">
+
+        <label>HRA (default ₹2000):</label>
+        <input type="number" id="hra" placeholder="Leave blank for default">
+
+        <label>TA (default ₹1000):</label>
+        <input type="number" id="ta" placeholder="Leave blank for default">
+
+        <button onclick="calculateSalary()">Calculate Salary</button>
+
+        <div class="salary-card" id="salaryCard" style="display:none;">
+            <h3 id="empTitle"></h3>
+            <p id="basicInfo"></p>
+            <p id="hraInfo"></p>
+            <p id="taInfo"></p>
+            <p id="grossInfo"></p>
+            <p id="taxInfo"></p>
+            <p><strong id="netInfo"></strong></p>
+        </div>
+    </div>
+
+    <script>
+        function Employee(name, basicSalary, hra = 2000, ta = 1000) {
+            this.name = name;
+            this.basicSalary = basicSalary;
+            this.hra = hra;
+            this.ta = ta;
+        }
+
+        Employee.prototype.calculateNetSalary = function() {
+            var gross = this.basicSalary + this.hra + this.ta;
+            var tax = gross * 0.10;
+            var net = gross - tax;
+
+            return {
+                gross: gross,
+                tax: tax,
+                net: net
+            };
+        }
+
+        function calculateSalary() {
+            var name = document.getElementById("empName").value;
+            var basic = parseFloat(document.getElementById("basicSalary").value);
+
+            var hraInput = document.getElementById("hra").value;
+            var taInput = document.getElementById("ta").value;
+
+            var hra = hraInput == "" ? 2000 : parseFloat(hraInput);
+            var ta = taInput == "" ? 1000 : parseFloat(taInput);
+
+            if (name == "") {
+                alert("Please enter employee name!");
+                return;
+            }
+
+            if (isNaN(basic) || basic <= 0) {
+                alert("Please enter a valid basic salary!");
+                return;
+            }
+
+            var emp = new Employee(name, basic, hra, ta);
+            var result = emp.calculateNetSalary();
+
+            document.getElementById("empTitle").innerText = "Salary Details: " + emp.name;
+            document.getElementById("basicInfo").innerText = "Basic Salary: ₹" + emp.basicSalary;
+            document.getElementById("hraInfo").innerText = "HRA: ₹" + emp.hra;
+            document.getElementById("taInfo").innerText = "TA: ₹" + emp.ta;
+            document.getElementById("grossInfo").innerText = "Gross Salary: ₹" + result.gross;
+            document.getElementById("taxInfo").innerText = "Tax (10%): ₹" + result.tax;
+            document.getElementById("netInfo").innerText = "Net Salary: ₹" + result.net;
+
+            document.getElementById("salaryCard").style.display = "block";
+        }
+
+    </script>
+
+</body>
+</html>
+

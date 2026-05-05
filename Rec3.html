@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Number Analyzer</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial;
+            text-align: center;
+        }
+
+        .box {
+            background-color: white;
+            width: 350px;
+            margin: 60px auto;
+            padding: 25px;
+            border: 2px solid navy;
+        }
+
+        input {
+            width: 80%;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 25px;
+            background-color: navy;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+
+        .output {
+            background-color: lightyellow;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+            border: 1px solid gray;
+        }
+
+        .output p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>Number Analyzer</h2>
+        <input type="number" id="myNumber" placeholder="Enter a number">
+        <br>
+        <button onclick="analyzeNumber()">Analyze</button>
+
+        <div class="output" id="output" style="display:none;">
+            <p id="palindromeResult"></p>
+            <p id="armstrongResult"></p>
+            <p id="primeResult"></p>
+            <p id="factorialResult"></p>
+        </div>
+    </div>
+
+    <script>
+
+        function checkPalindrome(n) {
+            var original = n.toString();
+            var reversed = original.split("").reverse().join("");
+            if (original == reversed) {
+                return "✅ It IS a Palindrome";
+            } else {
+                return "❌ It is NOT a Palindrome";
+            }
+        }
+
+        function checkArmstrong(n) {
+            var str = n.toString();
+            var digits = str.length;
+            var total = 0;
+
+            for (var i = 0; i < str.length; i++) {
+                var d = parseInt(str[i]);
+                total = total + Math.pow(d, digits);
+            }
+
+            if (total == n) {
+                return "✅ It IS an Armstrong Number";
+            } else {
+                return "❌ It is NOT an Armstrong Number";
+            }
+        }
+
+        function checkPrime(n) {
+            if (n < 2) {
+                return "❌ It is NOT a Prime Number";
+            }
+
+            for (var i = 2; i < n; i++) {
+                if (n % i == 0) {
+                    return "❌ It is NOT a Prime Number";
+                }
+            }
+
+            return "✅ It IS a Prime Number";
+        }
+
+        function getFactorial(n) {
+            if (n < 0) {
+                return "Factorial not possible for negative numbers";
+            }
+            if (n == 0 || n == 1) {
+                return "Factorial of " + n + " = 1";
+            }
+
+            var result = 1;
+            for (var i = 2; i <= n; i++) {
+                result = result * i;
+            }
+
+            return "Factorial of " + n + " = " + result;
+        }
+
+        function analyzeNumber() {
+            var num = parseInt(document.getElementById("myNumber").value);
+
+            if (isNaN(num)) {
+                alert("Please enter a valid number!");
+                return;
+            }
+
+            document.getElementById("palindromeResult").innerText = checkPalindrome(num);
+            document.getElementById("armstrongResult").innerText = checkArmstrong(num);
+            document.getElementById("primeResult").innerText = checkPrime(num);
+            document.getElementById("factorialResult").innerText = getFactorial(num);
+
+            document.getElementById("output").style.display = "block";
+        }
+
+    </script>
+
+</body>
+</html>

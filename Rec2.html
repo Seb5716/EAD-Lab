@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #7ecbcf;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .calculator {
+            background-color: #f0f0f0;
+            border-radius: 20px;
+            overflow: hidden;
+            width: 300px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .display {
+            background-color: #1e1e1e;
+            padding: 20px 24px 24px;
+            text-align: right;
+            min-height: 90px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .display .expression {
+            color: #888;
+            font-size: 14px;
+            min-height: 18px;
+            margin-bottom: 6px;
+        }
+
+        .display .current {
+            color: white;
+            font-size: 42px;
+            font-weight: 300;
+            letter-spacing: -1px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .btn {
+            border: none;
+            background-color: #f0f0f0;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 400;
+            color: #333;
+            padding: 0;
+            height: 72px;
+            cursor: pointer;
+            border: 0.5px solid #e0e0e0;
+            transition: background-color 0.1s;
+        }
+
+        .btn:hover {
+            background-color: #e5e5e5;
+        }
+
+        .btn:active {
+            background-color: #d8d8d8;
+        }
+
+        .btn.operator {
+            color: #555;
+            font-size: 22px;
+        }
+
+        .btn.orange {
+            background-color: #f4845f;
+            color: white;
+            font-size: 26px;
+        }
+
+        .btn.orange:hover {
+            background-color: #f07050;
+        }
+
+        .btn.orange:active {
+            background-color: #e05a3a;
+        }
+
+        .btn.ac {
+            color: #555;
+            font-size: 17px;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <div class="display">
+            <div class="expression" id="expression"></div>
+            <div class="current" id="display">0</div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn operator" onclick="pressOperator('+')">+</button>
+            <button class="btn operator" onclick="pressOperator('-')">−</button>
+            <button class="btn operator" onclick="pressOperator('*')">×</button>
+            <button class="btn operator orange" onclick="pressOperator('/')">÷</button>
+
+            <button class="btn" onclick="pressNumber('7')">7</button>
+            <button class="btn" onclick="pressNumber('8')">8</button>
+            <button class="btn" onclick="pressNumber('9')">9</button>
+            <button class="btn orange" onclick="pressEquals()" rowspan="2" id="equalsBtn" style="grid-row: span 2; font-size:28px;">=</button>
+
+            <button class="btn" onclick="pressNumber('4')">4</button>
+            <button class="btn" onclick="pressNumber('5')">5</button>
+            <button class="btn" onclick="pressNumber('6')">6</button>
+
+            <button class="btn" onclick="pressNumber('1')">1</button>
+            <button class="btn" onclick="pressNumber('2')">2</button>
+            <button class="btn" onclick="pressNumber('3')">3</button>
+            <button class="btn orange" onclick="pressEquals()" style="font-size:28px;">=</button>
+
+            <button class="btn" onclick="pressNumber('0')">0</button>
+            <button class="btn" onclick="pressDot()">.</button>
+            <button class="btn ac" onclick="pressAC()">AC</button>
+        </div>
+    </div>
+
+    <script>
+
+        var currentNum = "0";
+        var firstNum = null;
+        var operator = null;
+        var justCalculated = false;
+
+        function add(a, b) {
+            return a + b;
+        }
+
+        function subtract(a, b) {
+            return a - b;
+        }
+
+        function multiply(a, b) {
+            return a * b;
+        }
+
+        function divide(a, b) {
+            if (b == 0) {
+                return "Error";
+            }
+            return a / b;
+        }
+
+        function calculate(num1, num2, operationCallback) {
+            return operationCallback(num1, num2);
+        }
+
+        function updateDisplay() {
+            var display = document.getElementById("display");
+            if (currentNum.length > 9) {
+                display.style.fontSize = "26px";
+            } else {
+                display.style.fontSize = "42px";
+            }
+            display.innerText = currentNum;
+        }
+
+        function pressNumber(num) {
+            if (justCalculated) {
+                currentNum = num;
+                justCalculated = false;
+            } else {
+                if (currentNum == "0") {
+                    currentNum = num;
+                } else {
+                    if (currentNum.length < 12) {
+                        currentNum = currentNum + num;
+                    }
+                }
+            }
+            updateDisplay();
+        }
+
+        function pressDot() {
+            if (justCalculated) {
+                currentNum = "0.";
+                justCalculated = false;
+            } else {
+                if (!currentNum.includes(".")) {
+                    currentNum = currentNum + ".";
+                }
+            }
+            updateDisplay();
+        }
+
+        function pressOperator(op) {
+            firstNum = parseFloat(currentNum);
+            operator = op;
+            justCalculated = true;
+
+
+            var symbols = { '+': '+', '-': '−', '*': '×', '/': '÷' };
+            document.getElementById("expression").innerText = firstNum + " " + symbols[op];
+        }
+
+        function pressEquals() {
+            if (operator == null || firstNum == null) {
+                return;
+            }
+
+            var secondNum = parseFloat(currentNum);
+            var result;
+
+            switch(operator) {
+                case '+':
+                    result = calculate(firstNum, secondNum, add);
+                    break;
+                case '-':
+                    result = calculate(firstNum, secondNum, subtract);
+                    break;
+                case '*':
+                    result = calculate(firstNum, secondNum, multiply);
+                    break;
+                case '/':
+                    result = calculate(firstNum, secondNum, divide);
+                    break;
+            }
+
+            var symbols = { '+': '+', '-': '−', '*': '×', '/': '÷' };
+            document.getElementById("expression").innerText = firstNum + " " + symbols[operator] + " " + secondNum + " =";
+
+            if (result == "Error") {
+                currentNum = "Error";
+            } else {
+                result = parseFloat(result.toFixed(10));
+                currentNum = result.toString();
+            }
+
+            operator = null;
+            firstNum = null;
+            justCalculated = true;
+            updateDisplay();
+        }
+
+        function pressAC() {
+            currentNum = "0";
+            firstNum = null;
+            operator = null;
+            justCalculated = false;
+            document.getElementById("expression").innerText = "";
+            updateDisplay();
+        }
+
+    </script>
+
+</body>
+</html>

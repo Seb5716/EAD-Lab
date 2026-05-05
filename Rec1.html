@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <style>
+        body {
+            background-color: lightblue;
+            font-family: Arial;
+            text-align: center;
+        }
+
+        .box {
+            background-color: white;
+            width: 300px;
+            margin: 100px auto;
+            padding: 30px;
+            border: 2px solid gray;
+        }
+
+        input {
+            width: 90%;
+            padding: 8px;
+            margin: 8px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: gray;
+        }
+
+        p {
+            color: red;
+        }
+
+        @media (max-width: 500px) {
+            .box {
+                width: 90%;
+                margin: 30px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Enter Username"><br>
+        <input type="password" id="password" placeholder="Enter Password"><br><br>
+        <button onclick="checkLogin()" id="loginBtn">Login</button>
+        <p id="msg"></p>
+    </div>
+
+    <script>
+        function attemptTracker() {
+            var count = 0;
+
+            return function() {
+                count = count + 1;
+                return count;
+            }
+        }
+
+        var getAttemptCount = attemptTracker();
+
+        function checkLogin() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            var msg = document.getElementById("msg");
+            var btn = document.getElementById("loginBtn");
+
+            if (username == "") {
+                msg.innerText = "Username cannot be empty!";
+                return;
+            }
+
+            if (password.length < 6) {
+                msg.innerText = "Password must be at least 6 characters!";
+                return;
+            }
+
+            if (username == "admin" && password == "pass123") {
+                msg.style.color = "green";
+                msg.innerText = "Login Successful!";
+                return;
+            } else {
+                var attempts = getAttemptCount();
+                msg.style.color = "red";
+
+                if (attempts >= 3) {
+                    msg.innerText = "Too many wrong attempts! Button disabled.";
+                    btn.disabled = true;
+                } else {
+                    msg.innerText = "Wrong credentials! Attempts: " + attempts + " / 3";
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>

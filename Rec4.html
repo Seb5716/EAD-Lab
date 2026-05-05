@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>String Processor</title>
+    <style>
+        body {
+            background-color: lavender;
+            font-family: Arial;
+            text-align: center;
+        }
+
+        .container {
+            background-color: white;
+            width: 400px;
+            margin: 60px auto;
+            padding: 25px;
+            border: 2px solid purple;
+        }
+
+        textarea {
+            width: 90%;
+            height: 60px;
+            padding: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            padding: 10px 25px;
+            background-color: purple;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+
+        .result-box {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+            border: 1px dashed gray;
+        }
+
+        .result-box p {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+
+        span.label {
+            font-weight: bold;
+            color: purple;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>String Processor Tool</h2>
+        <textarea id="myText" placeholder="Type a sentence here..."></textarea>
+        <br>
+        <button onclick="processString()">Process</button>
+
+        <div class="result-box" id="output" style="display:none;">
+            <p><span class="label">Reversed:</span> <span id="rev"></span></p>
+            <p><span class="label">Vowel Count:</span> <span id="vowels"></span></p>
+            <p><span class="label">Longest Word:</span> <span id="longest"></span></p>
+            <p><span class="label">Uppercase:</span> <span id="upper"></span></p>
+        </div>
+    </div>
+
+    <script>
+
+        // anonymous function to reverse string
+        var reverseString = function(str) {
+            var reversed = str.split("").reverse().join("");
+            return reversed;
+        }
+
+        // arrow function to count vowels
+        var countVowels = (str) => {
+            var count = 0;
+            var vowelList = "aeiouAEIOU";
+
+            for (var i = 0; i < str.length; i++) {
+                if (vowelList.includes(str[i])) {
+                    count = count + 1;
+                }
+            }
+            return count;
+        }
+
+        // anonymous function to find longest word
+        var findLongestWord = function(str) {
+            var words = str.split(" ");
+            var longest = "";
+
+            for (var i = 0; i < words.length; i++) {
+                if (words[i].length > longest.length) {
+                    longest = words[i];
+                }
+            }
+            return longest;
+        }
+
+        function processString() {
+            var text = document.getElementById("myText").value;
+
+            if (text.trim() == "") {
+                alert("Please enter some text!");
+                return;
+            }
+
+            document.getElementById("rev").innerText = reverseString(text);
+            document.getElementById("vowels").innerText = countVowels(text);
+            document.getElementById("longest").innerText = findLongestWord(text);
+            document.getElementById("upper").innerText = text.toUpperCase();
+
+            document.getElementById("output").style.display = "block";
+        }
+
+    </script>
+
+</body>
+</html>
